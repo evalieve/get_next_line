@@ -1,4 +1,4 @@
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdio.h>
 
 static int	ft_strlen(char *str, char c)
@@ -70,19 +70,19 @@ static int	ft_init(char **line, int fd, int *ret)
 
 int	get_next_line(int fd, char **line)
 {
-	static char	remains[BUFFER_SIZE];
+	static char	remains[MAX_FD][BUFFER_SIZE];
 	char		buff[BUFFER_SIZE + 1];
 	int			ret;
 
 	if (!ft_init(line, fd, &ret))
 		return (-1);
-	if (ft_strlen(remains, '\0') > 0)
+	if (ft_strlen(remains[fd], '\0') > 0)
 	{
-		*line = ft_filler(*line, remains);
+		*line = ft_filler(*line, remains[fd]);
 		if (!*line)
 			return (ft_free(*line));
-		if (ft_searchnl(remains))
-			return (ft_rest(remains + ft_strlen(remains, '\n') + 1, remains));
+		if (ft_searchnl(remains[fd]))
+			return (ft_rest(remains[fd] + ft_strlen(remains[fd], '\n') + 1, remains[fd]));
 	}
 	while (ret > 0)
 	{
@@ -94,7 +94,7 @@ int	get_next_line(int fd, char **line)
 		if (!*line)
 			return (ft_free(*line));
 		if (ft_searchnl(buff))
-			return (ft_rest(buff + ft_strlen(buff, '\n') + 1, remains));
+			return (ft_rest(buff + ft_strlen(buff, '\n') + 1, remains[fd]));
 	}
 	return (ret);
 }
