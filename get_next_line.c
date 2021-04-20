@@ -59,16 +59,23 @@ static char	*ft_filler(char	*line, char *src)
 	return (result);
 }
 
+static int	ft_init(char **line, int fd, int *ret)
+{
+	if (fd < 0 || BUFFER_SIZE < 1 || !line)
+		return (0);
+	*ret = 1;
+	*line = NULL;
+	return (1);
+}
+
 int	get_next_line(int fd, char **line)
 {
 	static char	remains[BUFFER_SIZE];
 	char		buff[BUFFER_SIZE + 1];
 	int			ret;
 
-	ret = 1;
-	if (fd < 0 || BUFFER_SIZE < 1 || !line)
+	if (!ft_init(line, fd, &ret))
 		return (-1);
-	*line = NULL;
 	if (ft_strlen(remains, '\0') > 0)
 	{
 		*line = ft_filler(*line, remains);
