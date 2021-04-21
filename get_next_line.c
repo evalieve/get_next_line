@@ -1,5 +1,4 @@
 #include "get_next_line.h"
-#include <stdio.h>
 
 static int	ft_strlen(char *str, char c)
 {
