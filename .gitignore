@@ -9,3 +9,5 @@ get_next_line.h.gch
 gnlTester
 text.txt
 text_bonus.txt
+gnl_main_bonus.c
+gnk_main.c
