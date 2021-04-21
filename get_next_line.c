@@ -28,7 +28,6 @@ static int	ft_rest(char *s, char *remains)
 		i++;
 	}
 	remains[i] = '\0';
-	//printf("remains: %s\n", remains);
 	return (1);
 }
 
@@ -59,23 +58,8 @@ static char	*ft_filler(char	*line, char *src)
 	return (result);
 }
 
-static int	ft_init(char **line, int fd, int *ret)
+int	ft_firstcheck(char *remains, char **line)
 {
-	if (fd < 0 || fd > 1023 || BUFFER_SIZE < 1 || !line)
-		return (0);
-	*ret = 1;
-	*line = NULL;
-	return (1);
-}
-
-int	get_next_line(int fd, char **line)
-{
-	static char	remains[BUFFER_SIZE];
-	char		buff[BUFFER_SIZE + 1];
-	int			ret;
-
-	if (!ft_init(line, fd, &ret))
-		return (-1);
 	if (ft_strlen(remains, '\0') > 0)
 	{
 		*line = ft_filler(*line, remains);
@@ -84,6 +68,22 @@ int	get_next_line(int fd, char **line)
 		if (ft_searchnl(remains))
 			return (ft_rest(remains + ft_strlen(remains, '\n') + 1, remains));
 	}
+	return (0);
+}
+
+int	get_next_line(int fd, char **line)
+{
+	static char	remains[BUFFER_SIZE];
+	char		buff[BUFFER_SIZE + 1];
+	int			ret;
+
+	if (fd < 0 || BUFFER_SIZE < 1 || !line)
+		return (-1);
+	*line = NULL;
+	ret = ft_firstcheck(remains, line);
+	if (ret != 0)
+		return (ret);
+	ret = 1;
 	while (ret > 0)
 	{
 		ret = read(fd, buff, BUFFER_SIZE);
